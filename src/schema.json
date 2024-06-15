@@ -1,0 +1,175 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Credit Card Application",
+  "description": "A form for credit card application.",
+  "type": "object",
+  "required": ["personalInfo", "address", "cardDetails"],
+  "properties": {
+    "personalInfo": {
+      "type": "object",
+      "title": "Personal Information",
+      "description": "Information about the applicant.",
+      "required": ["firstName", "lastName", "email", "dateOfBirth"],
+      "properties": {
+        "firstName": {
+          "type": "string",
+          "title": "First name",
+          "description": "Applicant's first name."
+        },
+        "lastName": {
+          "type": "string",
+          "title": "Last name",
+          "description": "Applicant's last name."
+        },
+        "email": {
+          "type": "string",
+          "title": "Email",
+          "description": "Applicant's email address.",
+          "format": "email"
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "title": "Date of Birth",
+          "description": "Applicant's date of birth in YYYY-MM-DD format.",
+          "format": "date"
+        },
+        "phoneNumber": {
+          "type": "string",
+          "title": "Phone number",
+          "description": "Applicant's contact number in US format.",
+          "pattern": "^\\(?[0-9]{3}\\)?[-. ]?[0-9]{3}[-. ]?[0-9]{4}$"
+        },
+        "creditScore": {
+          "type": "integer",
+          "title": "Credit score",
+          "description": "Enter your last known credit score.",
+          "minimum": 300,
+          "maximum": 850
+        }
+      }
+    },
+    "address": {
+      "type": "object",
+      "title": "Address",
+      "description": "Applicant's residential address.",
+      "required": ["street", "city", "state", "zip"],
+      "properties": {
+        "street": {
+          "type": "string",
+          "title": "Street Address",
+          "description": "Street name and number."
+        },
+        "city": {
+          "type": "string",
+          "title": "City",
+          "description": "City of residence."
+        },
+        "state": {
+          "type": "string",
+          "title": "State",
+          "description": "State of residence."
+        },
+        "zip": {
+          "type": "string",
+          "title": "ZIP Code",
+          "description": "ZIP code of the city of residence.",
+          "pattern": "^[0-9]{5}(?:-[0-9]{4})?$"
+        },
+        "mainAddress": {
+          "type": "boolean",
+          "title": "Main Address",
+          "description": "Is this your main address?",
+          "oneOf": [
+            {
+              "title": "Yes",
+              "const": true
+            },
+            {
+              "title": "No",
+              "const": false
+            }
+          ]
+        }
+      }
+    },
+    "cardDetails": {
+      "type": "object",
+      "title": "Card Details",
+      "description": "Details of the credit card being applied for.",
+      "required": ["cardType", "cardNumber", "expirationDate", "cvv"],
+      "properties": {
+        "cardType": {
+          "type": "string",
+          "title": "Card Type",
+          "description": "Type of the credit card.",
+          "enum": ["VISA", "MasterCard", "AMEX", "Discover"]
+        },
+        "cardNumber": {
+          "type": "string",
+          "title": "Card Number",
+          "description": "16-digit credit card number.",
+          "pattern": "^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:011|5[0-9][0-9])[0-9]{12}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|(?:2131|1800|35\\d{3})\\d{11})$"
+        },
+        "expirationDate": {
+          "type": "string",
+          "title": "Expiration Date",
+          "description": "Expiry date of the credit card in MM/YY format.",
+          "pattern": "^(0[1-9]|1[0-2])\\/([0-9]{2})$"
+        },
+        "cvv": {
+          "type": "string",
+          "title": "CVV",
+          "description": "3 or 4 digit security code found on the card.",
+          "pattern": "^[0-9]{3,4}$"
+        }
+      }
+    },
+    "employmentHistory": {
+      "type": "array",
+      "title": "Employment History",
+      "description": "List of past jobs held by the applicant.",
+      "items": {
+        "type": "object",
+        "required": ["position", "employer", "startDate"],
+        "properties": {
+          "position": {
+            "type": "string",
+            "title": "Job Position"
+          },
+          "employer": {
+            "type": "string",
+            "title": "Employer"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date",
+            "description": "Start date of the employment."
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date",
+            "description": "End date of the employment. Leave blank if currently employed."
+          }
+        }
+      }
+    },
+    "hasPreviousCards": {
+      "type": "boolean",
+      "title": "Had Previous Cards?",
+      "description": "Indicates if the applicant has held credit cards in the past."
+    },
+    "newsletterSubscription": {
+      "type": "boolean",
+      "title": "Subscribe to Newsletter?",
+      "description": "Indicates if the applicant wants to subscribe to the newsletter."
+    },
+    "preferredContactMethod": {
+      "type": "boolean",
+      "title": "Preferred Contact Method",
+      "description": "True for Email, False for Phone. Indicates the applicant's preferred method of contact.",
+      "enum": [true, false]
+    }
+  }
+}
