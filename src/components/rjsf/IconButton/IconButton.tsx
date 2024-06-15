@@ -1,13 +1,34 @@
 import React from "react";
 import {
   FormContextType,
-  IconButtonProps,
+  IconButtonProps as BaseIconButtonProps,
   RJSFSchema,
   StrictRJSFSchema,
+  GenericObjectType,
   TranslatableString,
 } from "@rjsf/utils";
 import { IoIosCopy, IoIosRemove } from "react-icons/io";
 import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
+
+/**
+ * Extended IconButtonProps interface to include variant.
+ *
+ * @template T - The type of the form data.
+ * @template S - The schema type, extending StrictRJSFSchema, defaults to RJSFSchema.
+ * @template F - The form context type, extending GenericObjectType.
+ *
+ * @interface IconButtonProps
+ * @extends {BaseIconButtonProps<T, S, F>}
+ * @property {string} [variant] - The variant of the button, e.g., "danger" for a delete button.
+ */
+interface IconButtonProps<
+  T,
+  S extends StrictRJSFSchema,
+  F extends GenericObjectType
+> extends BaseIconButtonProps<T, S, F> {
+  variant?: string;
+}
+
 /**
  * IconButton component for React JSON Schema Form (RJSF).
  *
@@ -16,7 +37,7 @@ import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
  *
  * @template T - The type of the form data.
  * @template S - The schema type, extending StrictRJSFSchema, defaults to RJSFSchema.
- * @template F - The form context type, defaults to any.
+ * @template F - The form context type, extending GenericObjectType.
  *
  * @param {IconButtonProps<T, S, F>} props - The props required by the IconButton component.
  * @param {React.ReactNode} props.icon - The icon to be displayed inside the button.
@@ -33,7 +54,7 @@ import { AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 export default function IconButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends GenericObjectType = any
 >(props: IconButtonProps<T, S, F>) {
   const {
     icon,
@@ -42,13 +63,14 @@ export default function IconButton<
     uiSchema,
     registry,
     disabled,
+    variant,
     ...otherProps
   } = props;
 
   let baseStyles: React.CSSProperties;
-  let hoverStyles: React.CSSProperties;
+  let hoverStyles: React.CSSProperties | undefined;
 
-  if (props.variant === "danger") {
+  if (variant === "danger") {
     baseStyles = {
       backgroundColor: "#EF4444",
       color: "#ffffff",
@@ -88,12 +110,14 @@ export default function IconButton<
       {...otherProps}
       style={{ ...commonStyles, ...baseStyles, ...props.style }}
       onMouseOver={(e) => {
-        if (hoverStyles) {
+        if (hoverStyles?.backgroundColor) {
           e.currentTarget.style.backgroundColor = hoverStyles.backgroundColor;
         }
       }}
       onMouseOut={(e) => {
-        e.currentTarget.style.backgroundColor = baseStyles.backgroundColor;
+        if (baseStyles.backgroundColor) {
+          e.currentTarget.style.backgroundColor = baseStyles.backgroundColor;
+        }
       }}
     >
       {icon}
